@@ -39,6 +39,8 @@
 
 >> 6. [nodejs url module](#6)
 
+>> 7. [nodejs events](#7)
+
 
 -------------------------------------------------------------------
 # 1
@@ -389,3 +391,62 @@ server.listen(8080);
 console.log(msg);
 ```
 [code](./node/node6/node6.2.js)
+
+----------------------------------------------------------------------------
+# 7
+## 7. nodejs events
+```
+event module
+```
+```js
+const events = require('events');
+const emitter = new events.EventEmitter();
+const event_name = 'night';                          // event
+const event_msg = 'i am so sleepy'
+
+const handler = () =>{
+    console.log(event_msg);
+};
+
+emitter.on(event_name,handler);
+
+emitter.emit(event_name);
+```
+[code](./node/node7/node7.1.js)
+```
+starting a file server using event
+```
+```js
+const http = require('http');
+const fs = require('fs');
+const events = require('events');
+
+const server_start = 'start_http';
+const stat = 200
+const type = {
+    'type':'text/html'
+}
+const host_file = './node7.2.html';
+const msg = 'event has been fired, starting http server at http://127.0.0.1:8080/'
+
+const server = http.createServer((req,res)=>{
+    fs.readFile(host_file,(err,data)=>{
+        if (err) throw err;
+        res.writeHead(stat,type);
+        res.write(data);
+        const end = res.end()
+        return end;
+    });
+});
+
+
+const handler = () =>{
+    server.listen(8080);
+    console.log(msg)
+}
+
+const emitter = new events.EventEmitter()
+emitter.on(server_start,handler);
+emitter.emit(server_start);
+```
+[code](./node/node7/node7.2.js)
