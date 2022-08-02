@@ -37,6 +37,7 @@
 
 >>> 5.5. rename files
 
+>> 6. [nodejs url module](#6)
 
 
 -------------------------------------------------------------------
@@ -323,3 +324,68 @@ fs.rename(name, rename, (err)=>{
 });
 ```
 [code](./node/node5.5.js)
+
+-----------------------------------------------------------------
+# 6
+## 6 nodejs url module
+
+```
+6.1 how node url works
+```
+```js
+const url = require('url');
+
+const add = "https://google.com/valorant.htm?year=2022&month=aug"
+const url_parse = url.parse(add, true);
+
+const hostname = url_parse.host
+const pathname = url_parse.path
+const search = url_parse.search
+const query_data = url_parse.query
+
+console.log(hostname);
+console.log(pathname);
+console.log(search);
+console.log(query_data);
+console.log(query_data.month);
+```
+[code](./node/node6/node6.1.js)
+
+```
+6.2 nodejs file server (url module)
+```
+```js
+const http = require('http');
+const fs = require('fs');
+const url = require('url');
+
+const type = {
+    'type':'text/html'
+}
+
+const error_msg = '404 NOT FOUND'
+const msg = 'server starting at http://127.0.0.1:8080/page1.html'
+const date = () =>{
+    return Date()
+};
+
+const server = http.createServer((req, res)=>{
+    const search_url = url.parse(req.url, true);
+    const page = "." + search_url.pathname;
+    console.log(date(),page);
+    fs.readFile(page, (err, data)=>{
+        if (err) {
+            res.writeHead(404, type);
+            res.write(error_msg);
+            res.end()
+        }
+        res.writeHead(200, type);
+        res.write(data);
+        const end = res.end();
+        return end
+    })
+})
+server.listen(8080);
+console.log(msg);
+```
+[code](./node/node6/node6.2.js)
